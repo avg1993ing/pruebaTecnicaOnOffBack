@@ -1,0 +1,89 @@
+## Build folders
+bin/
+obj/
+out/
+publish/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Visual Studio
+.vs/
+
+## Visual Studio Code
+.vscode/
+*.code-workspace
+
+## Logs
+*.log
+
+## Cache
+.nuget/packages/
+*.nuget.cache
+
+## Debug / profiling
+*.pdb
+*.mdb
+*.opendb
+
+## Environment files
+*.env
+*.env.*
+
+## ASP.NET Identity / Data Protection keys
+**/App_Data/
+**/DataProtection-Keys/
+
+## EF Core
+Migrations/*Designer.cs
+Migrations/*Snapshot.cs
+
+## IIS / Hosting
+*.vspscc
+applicationhost.config
+
+## OS generated files
+Thumbs.db
+ehthumbs.db
+.DS_Store
+desktop.ini
+
+## Dotnet tools
+/.store/
+/.dotnet/
+/global.json
+
+## Publish artifacts
+/artifacts/
+/publish/
+
+## Rider / JetBrains
+.idea/
+*.sln.iml
+
+## Test results
+TestResult*/
+*.trx
+*.coverage
+*.coveragexml
+
+## Node (Angular/React en proyectos híbridos)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+## Temporary files
+*.tmp
+*.temp
+
+## Certificados y llaves
+*.pfx
+*.pem
+*.key
+
+## Docker
+docker-compose.override.yml
+**/obj/Docker/*
