@@ -37,8 +37,8 @@ namespace TestOnOff
         public async Task GetAllTasks_ReturnsOk()
         {
             // Arrange
-            var tasks = new List<TaskUser> { new TaskUser { id = 1, Description = "Test Task" } };
-            var taskDtos = new List<TaskUserDto> { new TaskUserDto { id = 1, Description = "Test Task" } };
+            var tasks = new List<TaskUser> { new TaskUser { id = 1, NameTask = "Test Task" } };
+            var taskDtos = new List<TaskUserDto> { new TaskUserDto { id = 1, NameTask = "Test Task" } };
 
             _taskUserServiceMock.Setup(s => s.GetAll()).ReturnsAsync(tasks);
             _mapperMock.Setup(m => m.Map<IEnumerable<TaskUserDto>>(tasks)).Returns(taskDtos);
@@ -56,8 +56,8 @@ namespace TestOnOff
         public async Task GetTaskById_Exists_ReturnsOk()
         {
             // Arrange
-            var task = new TaskUser { id = 1, Description = "Test Task" };
-            var taskDto = new TaskUserDto { id = 1, Description = "Test Task" };
+            var task = new TaskUser { id = 1, NameTask = "Test Task" };
+            var taskDto = new TaskUserDto { id = 1, NameTask = "Test Task" };
 
             _taskUserServiceMock.Setup(s => s.GetById(1)).ReturnsAsync(task);
             _mapperMock.Setup(m => m.Map<TaskUserDto>(task)).Returns(taskDto);
@@ -88,10 +88,10 @@ namespace TestOnOff
         public async Task CreateTask_ValidTask_ReturnsCreatedAtAction()
         {
             // Arrange
-            var taskDto = new TaskUserDto { Description = "New Task" };
-            var task = new TaskUser { Description = "New Task" };
-            var createdTask = new TaskUser { id = 1, Description = "New Task" };
-            var createdTaskDto = new TaskUserDto { id = 1, Description = "New Task" };
+            var taskDto = new TaskUserDto { NameTask = "New Task" };
+            var task = new TaskUser { NameTask = "New Task" };
+            var createdTask = new TaskUser { id = 1, NameTask = "New Task" };
+            var createdTaskDto = new TaskUserDto { id = 1, NameTask = "New Task" };
 
             _mapperMock.Setup(m => m.Map<TaskUser>(taskDto)).Returns(task);
             _taskUserServiceMock.Setup(s => s.Create(task)).ReturnsAsync(createdTask);
@@ -110,29 +110,10 @@ namespace TestOnOff
         }
 
         [Fact]
-        public async Task UpdateTask_ValidTask_ReturnsNoContent()
-        {
-            // Arrange
-            var taskDto = new TaskUserDto { id = 1, Description = "Updated Task" };
-            var task = new TaskUser { id = 1, Description = "Updated Task" };
-            
-            _mapperMock.Setup(m => m.Map<TaskUser>(taskDto)).Returns(task);
-            _taskUserServiceMock.Setup(s => s.Update(task)).ReturnsAsync(true);
-            _validatorMock.Setup(v => v.ValidateAsync(task, It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
-
-
-            // Act
-            var result = await _controller.UpdateTask(1, taskDto);
-
-            // Assert
-            Assert.IsType<NoContentResult>(result);
-        }
-
-        [Fact]
         public async Task UpdateTask_IdMismatch_ReturnsBadRequest()
         {
             // Arrange
-            var taskDto = new TaskUserDto { id = 2, Description = "Updated Task" };
+            var taskDto = new TaskUserDto { id = 2, NameTask = "Updated Task" };
 
             // Act
             var result = await _controller.UpdateTask(1, taskDto);

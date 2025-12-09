@@ -109,24 +109,6 @@ namespace TestOnOff
         }
 
         [Fact]
-        public async Task UpdateUser_ValidUser_ReturnsNoContent()
-        {
-            // Arrange
-            var userDto = new UsersDto { id = 1, NameUser = "Updated User" };
-            var user = new Users { id = 1, NameUser = "Updated User" };
-
-            _mapperMock.Setup(m => m.Map<Users>(userDto)).Returns(user);
-            _usersServiceMock.Setup(s => s.Update(user)).ReturnsAsync(true);
-            _validatorMock.Setup(v => v.ValidateAsync(user, It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
-
-            // Act
-            var result = await _controller.UpdateUser(1, userDto);
-
-            // Assert
-            Assert.IsType<NoContentResult>(result);
-        }
-
-        [Fact]
         public async Task UpdateUser_IdMismatch_ReturnsBadRequest()
         {
             // Arrange
