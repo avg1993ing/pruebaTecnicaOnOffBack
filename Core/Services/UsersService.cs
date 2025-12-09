@@ -13,7 +13,17 @@ namespace Core.Services
 
         public async Task<Users> Create(Users entity)
         {
-            return await _adminInterfaces.usersRepository.Add(entity);
+            entity.IsActive = false;
+            var user = await _adminInterfaces.usersRepository.Add(entity);
+            if (user != null)
+            {
+                await _adminInterfaces.utilsFunctionsRepository.SMTP(
+                    entity.Email,
+                    "Activar cuenta",
+                    await _adminInterfaces.utilsFunctionsRepository.GenerateTokenJWTRecoveryPassword(user));
+            }
+
+            return user;
         }
 
         public async Task<bool> Delete(int id)

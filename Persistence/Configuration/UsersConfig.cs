@@ -12,8 +12,11 @@ namespace Persistence.Configuration
             builder.ToTable("users");
             builder.Property(e => e.id).HasColumnName("idusers");
             builder.Property(e => e.NameUser).HasColumnName("nameuser");
+            builder.Property(e => e.Email).HasColumnName("email");
+            builder.Property(e => e.IsActive).HasColumnName("isactive");
             builder.Property(e => e.PasswordUser).HasColumnName("passworduser");
 
         }
     }
 }
+

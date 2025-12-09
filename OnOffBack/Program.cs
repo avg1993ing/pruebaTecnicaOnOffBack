@@ -8,7 +8,6 @@ using Infraestructure.Filters;
 using Infraestructure.Repositories;
 using Infraestructure.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -63,10 +62,10 @@ builder.Services.AddAuthentication(x => {
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = true,
-        /*RequireExpirationTime = true,
-        ValidIssuer = Configuration["Jwt:Issuer"],
-        ValidAudience = Configuration["Jwt:Audience"],
-        ClockSkew = TimeSpan.FromDays(1)*/
+        RequireExpirationTime = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ClockSkew = TimeSpan.FromDays(1)
     };
 });
 #endregion
@@ -84,16 +83,16 @@ builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IBaseService<TaskUser>, TaskUserService>();
 builder.Services.AddTransient<ITaskUserService, TaskUserService>();
 
+builder.Services.AddTransient<IValidarEmailService, ValidarEmailService>();
+
 builder.Services.AddTransient<FilterExceptions>();
 #endregion
 
 try
 {
-    //Conexion db MySql
-    string cadenaConnection = builder.Configuration.GetConnectionString("MySqlConnection");
-    var serverVersion = new MySqlServerVersion(new Version(8, 0, 42));
+    string cadenaConnection = builder.Configuration.GetConnectionString("SqlServerConnection");
     builder.Services.AddDbContext<BaseDeDatosContext>(options =>
-         options.UseMySql(cadenaConnection, serverVersion)
+         options.UseSqlServer(cadenaConnection)
         .EnableSensitiveDataLogging()
         .LogTo(Console.WriteLine, LogLevel.Information));
 }
