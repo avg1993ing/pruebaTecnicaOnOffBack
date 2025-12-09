@@ -88,23 +88,12 @@ builder.Services.AddTransient<IValidarEmailService, ValidarEmailService>();
 builder.Services.AddTransient<FilterExceptions>();
 #endregion
 
-try
-{
-    string cadenaConnection = builder.Configuration.GetConnectionString("SqlServerConnection");
-    builder.Services.AddDbContext<BaseDeDatosContext>(options =>
-         options.UseSqlServer(cadenaConnection)
-        .EnableSensitiveDataLogging()
-        .LogTo(Console.WriteLine, LogLevel.Information));
-}
-catch (Exception e)
-{
-    EntityBaseException entityBaseException = new EntityBaseException();
-    entityBaseException.Message = $"Connection Data Base Error : {e.Message}";
-    entityBaseException.Name = "Internal Server Error";
+string cadenaConnection = builder.Configuration.GetConnectionString("SqlServerConnection");
+builder.Services.AddDbContext<BaseDeDatosContext>(options =>
+     options.UseSqlServer(cadenaConnection)
+    .EnableSensitiveDataLogging()
+    .LogTo(Console.WriteLine, LogLevel.Information));
 
-    InternalServerErrorBusinessExceprions ex = new InternalServerErrorBusinessExceprions(entityBaseException);
-    throw ex;
-}
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(typeof(FilterExceptions));

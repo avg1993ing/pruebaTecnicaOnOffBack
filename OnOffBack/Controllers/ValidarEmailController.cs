@@ -1,6 +1,5 @@
-﻿﻿using Microsoft.AspNetCore.Authorization;
+﻿﻿﻿﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Core.Interfaces.Repository;
 using Core.Interfaces.Services;
 
 namespace OnOffBack.Controllers
@@ -12,7 +11,7 @@ namespace OnOffBack.Controllers
     {
         public readonly IValidarEmailService _validarEmailService;
 
-        public ValidarEmailController(IUtilsFunctionsRepository utilsFunctionsRepository, IValidarEmailService validarEmailService)
+        public ValidarEmailController(IValidarEmailService validarEmailService)
         {
             _validarEmailService = validarEmailService;
         }
