@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.DTOs;
+using Core.Entities;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Services;
 using Microsoft.Extensions.Logging;
@@ -27,6 +28,16 @@ namespace Core.Services
         public async Task<IEnumerable<TaskUser>> GetAll()
         {
             return await _adminInterfaces.taskUserRepository.GetAll();
+        }
+
+        public async Task<IEnumerable<TaskUser>> GetAllTasksByIdUseFilter(int id, bool? estado)
+        {
+            return await _adminInterfaces.taskUserRepository.GetAllTasksByIdUseFilter(id, estado);
+        }
+
+        public async Task<IEnumerable<TaskUser>> GetAllTasksByIdUser(int id)
+        {
+            return await _adminInterfaces.taskUserRepository.GetAllTasksByIdUser(id);
         }
 
         public async Task<TaskUser> GetById(int id)

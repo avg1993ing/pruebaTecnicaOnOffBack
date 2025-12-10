@@ -1,6 +1,7 @@
 ﻿﻿﻿﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Core.Interfaces.Services;
+using Core.DTOs;
 
 namespace OnOffBack.Controllers
 {
@@ -16,8 +17,8 @@ namespace OnOffBack.Controllers
             _validarEmailService = validarEmailService;
         }
 
-        [HttpGet("validar")]
-        public async Task<IActionResult> Validar([FromQuery] string token)
+        [HttpGet]
+        public async Task<ActionResult<ResponseGenericApi<object>>> Validar([FromQuery] string token)
         {
             if (string.IsNullOrEmpty(token))
             {
@@ -29,7 +30,7 @@ namespace OnOffBack.Controllers
             {
                 return BadRequest("Token inválido o expirado.");
             }
-            return Ok(new { message = "Correo validado exitosamente." });
+            return Ok(new ResponseGenericApi<object>(new { message = "Correo validado exitosamente." }, true)); ;
         }
     }
 }

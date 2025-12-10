@@ -20,15 +20,15 @@ namespace OnOffBack.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<ActionResult<ResponseGenericApi<IEnumerable<UsersDto>>>> GetAllUsers()
         {
             var users = await _usersService.GetAll();
             var usersDto = _mapper.Map<IEnumerable<UsersDto>>(users);
-            return Ok(usersDto);
+            return Ok(new ResponseGenericApi<IEnumerable<UsersDto>>(usersDto, true));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<ActionResult<ResponseGenericApi<UsersDto>>> GetUserById(int id)
         {
             var user = await _usersService.GetById(id);
             if (user == null)
@@ -36,39 +36,42 @@ namespace OnOffBack.Controllers
                 return NotFound();
             }
             var userDto = _mapper.Map<UsersDto>(user);
-            return Ok(userDto);
+            return Ok(new ResponseGenericApi<UsersDto>(userDto, true));
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> CreateUser(UsersDto userDto)
+        public async Task<ActionResult<ResponseGenericApi<UsersDto>>> CreateUser(UsersDto userDto)
         {
             var user = _mapper.Map<Users>(userDto);
+            user.PasswordUser = userDto.PasswordUser;
             var newUser = await _usersService.Create(user);
             var newUserDto = _mapper.Map<UsersDto>(newUser);
-            return CreatedAtAction(nameof(GetUserById), new { id = newUserDto.id }, newUserDto);
+            return Ok(new ResponseGenericApi<UsersDto>(newUserDto, true , "Usuario creado correctamente \r\n por favor revisar su correo para activación de cuenta"));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UsersDto userDto)
+        public async Task<ActionResult<ResponseGenericApi<UsersDto>>> UpdateUser(int id, UsersDto userDto)
         {
             if (id != userDto.id)
             {
                 return BadRequest();
             }
             var user = _mapper.Map<Users>(userDto);
-            await _usersService.Update(user);
-            return NoContent();
+            var userUpdate = await _usersService.Update(user);
+            var newUserDto = _mapper.Map<TaskUserDto>(userUpdate);
+            return Ok(new ResponseGenericApi<TaskUserDto>(newUserDto, true));
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<ActionResult<ResponseGenericApi<bool>>> DeleteUser(int id)
         {
             var result = await _usersService.Delete(id);
             if (!result)
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok(new ResponseGenericApi<bool>(result, true));
         }
     }
 }

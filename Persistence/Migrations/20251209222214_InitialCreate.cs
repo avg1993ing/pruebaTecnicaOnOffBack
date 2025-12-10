@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class NombreDeTuMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,48 +28,46 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "users",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    idusers = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    nameuser = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    passworduser = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isactive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.id);
+                    table.PrimaryKey("PK_users", x => x.idusers);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskUser",
+                name: "taskuser",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    idUsers = table.Column<int>(type: "int", nullable: false),
-                    NameTask = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateTask = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Complete = table.Column<bool>(type: "bit", nullable: false),
-                    IdUsersNavigationid = table.Column<int>(type: "int", nullable: false)
+                    idusers = table.Column<int>(type: "int", nullable: false),
+                    nametask = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    datetask = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    complete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskUser", x => x.id);
+                    table.PrimaryKey("PK_taskuser", x => x.id);
                     table.ForeignKey(
-                        name: "FK_TaskUser_Users_IdUsersNavigationid",
-                        column: x => x.IdUsersNavigationid,
-                        principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "fk_taus_user",
+                        column: x => x.idusers,
+                        principalTable: "users",
+                        principalColumn: "idusers");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskUser_IdUsersNavigationid",
-                table: "TaskUser",
-                column: "IdUsersNavigationid");
+                name: "IX_taskuser_idusers",
+                table: "taskuser",
+                column: "idusers");
         }
 
         /// <inheritdoc />
@@ -79,10 +77,10 @@ namespace Persistence.Migrations
                 name: "LogApplication");
 
             migrationBuilder.DropTable(
-                name: "TaskUser");
+                name: "taskuser");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "users");
         }
     }
 }

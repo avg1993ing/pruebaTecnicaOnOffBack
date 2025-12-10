@@ -6,6 +6,6 @@
         public string NameTask { get; set; }
         public DateTime DateTask { get; set; }
         public bool Complete { get; set; }
-        public Users IdUsersNavigation { get; set; }
+        public virtual Users IdUsersNavigation { get; set; }
     }
 }

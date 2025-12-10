@@ -14,6 +14,7 @@ namespace Core.Services
         public async Task<Users> Create(Users entity)
         {
             entity.IsActive = false;
+            entity.PasswordUser = _adminInterfaces.utilsFunctionsRepository.DecodeMd5(entity.PasswordUser);
             var user = await _adminInterfaces.usersRepository.Add(entity);
             if (user != null)
             {

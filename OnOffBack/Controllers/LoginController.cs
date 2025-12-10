@@ -16,25 +16,29 @@ namespace OnOffBack.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<ActionResult<ResponseGenericApi<LoginResponseDto>>> Login(LoginDto loginDto)
         {
-            var user = await _adminInterfaces.usersRepository.GetByName(loginDto.NameUser);
+            var user = await _adminInterfaces.usersRepository.GetByEmail(loginDto.NameUser);
 
             if (user == null)
             {
-                return Unauthorized();
+                return Unauthorized(new ResponseGenericApi<LoginResponseDto>("Usuario, contraseña incorrectos o cuenta inactiva", false));
             }
 
             var passwordHash = _adminInterfaces.utilsFunctionsRepository.DecodeMd5(loginDto.PasswordUser);
 
             if (user.PasswordUser != passwordHash)
             {
-                return Unauthorized();
+                return Unauthorized(new ResponseGenericApi<LoginResponseDto>("Usuario o contraseña incorrectos", false));
             }
 
             var token = _adminInterfaces.utilsFunctionsRepository.GenerateTokenJWT(user);
-
-            return Ok(new { Token = token });
+            LoginResponseDto loginResponseDto = new LoginResponseDto
+            {
+                Token = token,
+                IdUser = user.id.ToString()
+            };
+            return Ok(new ResponseGenericApi<LoginResponseDto>(loginResponseDto, true));
         }
     }
 }

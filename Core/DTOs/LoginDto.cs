@@ -1,6 +1,6 @@
 ﻿namespace Core.DTOs
 {
-    public class LoginDto
+    public record LoginDto
     {
         public string NameUser { get; set; }
         public string PasswordUser { get; set; }

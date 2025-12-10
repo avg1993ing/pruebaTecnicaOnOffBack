@@ -153,7 +153,7 @@ namespace Infraestructure.Repositories
             {
                 // 1. Crear el mensaje
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("GreenHouse", "no-reply@greenhouse.com"));
+                message.From.Add(new MailboxAddress("Tareas", "no-reply@tareas.com"));
                 message.To.Add(new MailboxAddress(toEmail, toEmail));
                 message.Subject = subject;
 
@@ -215,10 +215,10 @@ namespace Infraestructure.Repositories
                 // 3. Configurar conexión SMTP
                 using var client = new MailKit.Net.Smtp.SmtpClient();
                 client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                await client.ConnectAsync(_configuration["SMTP:HostName"], int.Parse(_configuration["SMTP:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+                await client.ConnectAsync(_configuration["SMTP:Server"], int.Parse(_configuration["SMTP:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
 
                 // Credenciales
-                await client.AuthenticateAsync(_configuration["SMTP:user"], _configuration["SMTP:password"]);
+                await client.AuthenticateAsync(_configuration["SMTP:User"], _configuration["SMTP:Password"]);
 
                 // 4. Enviar correo
                 await client.SendAsync(message);

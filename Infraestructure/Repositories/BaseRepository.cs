@@ -57,7 +57,7 @@ namespace Infraestructure.Repositories
 
         public virtual async Task<T> GetById(int id)
         {
-            return await _entities.FirstOrDefaultAsync();
+            return await _entities.Where(x => x.id == id).FirstOrDefaultAsync();
         }
 
         public virtual async Task<T> UpdateAsync(T entity)

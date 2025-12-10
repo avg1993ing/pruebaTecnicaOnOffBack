@@ -58,63 +58,69 @@ namespace Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<bool>("Complete")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("complete");
 
                     b.Property<DateTime>("DateTask")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IdUsersNavigationid")
-                        .HasColumnType("int");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("datetask");
 
                     b.Property<string>("NameTask")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("nametask");
 
                     b.Property<int>("idUsers")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("idusers");
 
                     b.HasKey("id");
 
-                    b.HasIndex("IdUsersNavigationid");
+                    b.HasIndex("idUsers");
 
-                    b.ToTable("TaskUser");
+                    b.ToTable("taskuser", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Users", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("idusers");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("email");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasColumnName("isactive");
 
                     b.Property<string>("NameUser")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("nameuser");
 
                     b.Property<string>("PasswordUser")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("passworduser");
 
                     b.HasKey("id");
 
-                    b.ToTable("Users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.TaskUser", b =>
                 {
                     b.HasOne("Core.Entities.Users", "IdUsersNavigation")
                         .WithMany("TaskUsers")
-                        .HasForeignKey("IdUsersNavigationid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("idUsers")
+                        .IsRequired()
+                        .HasConstraintName("fk_taus_user");
 
                     b.Navigation("IdUsersNavigation");
                 });

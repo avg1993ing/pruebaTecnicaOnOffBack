@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.DTOs;
+using Core.Entities;
 
 namespace Core.Interfaces.Services
 {
@@ -9,5 +10,7 @@ namespace Core.Interfaces.Services
         Task<IEnumerable<TaskUser>> GetAll();
         Task<TaskUser> GetById(int id);
         Task<TaskUser> Update(TaskUser entity);
+        Task<IEnumerable<TaskUser>> GetAllTasksByIdUser(int id);
+        Task<IEnumerable<TaskUser>> GetAllTasksByIdUseFilter(int id, bool? estado);
     }
 }

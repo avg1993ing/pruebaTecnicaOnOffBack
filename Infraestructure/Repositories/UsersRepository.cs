@@ -11,9 +11,9 @@ namespace Infraestructure.Repositories
         {
         }
 
-        public async Task<Users> GetByName(string name)
+        public async Task<Users> GetByEmail(string email)
         {
-            return await _entities.FirstOrDefaultAsync(u => u.NameUser == name);
+            return await _entities.FirstOrDefaultAsync(u => u.Email == email && u.IsActive == true);
         }
     }
 }

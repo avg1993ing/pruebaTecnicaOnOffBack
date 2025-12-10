@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OnOffBack.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TareasController : BaseController<TaskUser, TaskUserDto>
@@ -19,16 +19,36 @@ namespace OnOffBack.Controllers
             _taskUserService = taskUserService;
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> GetAllTasks()
+        [Route("GetAllTasksByIdUser")]
+        public async Task<ActionResult<ResponseGenericApi<IEnumerable<TaskUserDto>>>> GetAllTasksByIdUser(int id)
+        {
+            var tasks = await _taskUserService.GetAllTasksByIdUser(id);
+            var tasksDto = _mapper.Map<IEnumerable<TaskUserDto>>(tasks);
+            return Ok(new ResponseGenericApi<IEnumerable<TaskUserDto>>(tasksDto, true));
+        }
+
+        [HttpGet]
+        [Route("GetAllTasksByIdUseFilter")]
+        public async Task<ActionResult<ResponseGenericApi<IEnumerable<TaskUserDto>>>> GetAllTasksByIdUseFilter(int id,bool? estado)
+        {
+            var tasks = await _taskUserService.GetAllTasksByIdUseFilter(id, estado);
+            var tasksDto = _mapper.Map<IEnumerable<TaskUserDto>>(tasks);
+            return Ok(new ResponseGenericApi<IEnumerable<TaskUserDto>>(tasksDto, true));
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<ResponseGenericApi<IEnumerable<TaskUserDto>>>> GetAllTasks()
         {
             var tasks = await _taskUserService.GetAll();
             var tasksDto = _mapper.Map<IEnumerable<TaskUserDto>>(tasks);
-            return Ok(tasksDto);
+            return Ok(new ResponseGenericApi<IEnumerable<TaskUserDto>>(tasksDto, true));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTaskById(int id)
+        public async Task<ActionResult<ResponseGenericApi<TaskUserDto>>> GetTaskById(int id)
         {
             var task = await _taskUserService.GetById(id);
             if (task == null)
@@ -36,39 +56,40 @@ namespace OnOffBack.Controllers
                 return NotFound();
             }
             var taskDto = _mapper.Map<TaskUserDto>(task);
-            return Ok(taskDto);
+            return Ok(new ResponseGenericApi<TaskUserDto>(taskDto, true));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(TaskUserDto taskDto)
+        public async Task<ActionResult<ResponseGenericApi<TaskUserDto>>> CreateTask(TaskUserDto taskDto)
         {
             var task = _mapper.Map<TaskUser>(taskDto);
             var newTask = await _taskUserService.Create(task);
             var newTaskDto = _mapper.Map<TaskUserDto>(newTask);
-            return CreatedAtAction(nameof(GetTaskById), new { id = newTaskDto.id }, newTaskDto);
+            return Ok(new ResponseGenericApi<TaskUserDto>(newTaskDto, true));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTask(int id, TaskUserDto taskDto)
+        [HttpPut]
+        public async Task<ActionResult<ResponseGenericApi<TaskUserDto>>> UpdateTask([FromQuery]int id, TaskUserDto taskDto)
         {
             if (id != taskDto.id)
             {
                 return BadRequest();
             }
             var task = _mapper.Map<TaskUser>(taskDto);
-            await _taskUserService.Update(task);
-            return NoContent();
+            var taskUpdate = await _taskUserService.Update(task);
+            var newTaskDto = _mapper.Map<TaskUserDto>(taskUpdate);
+            return Ok(new ResponseGenericApi<TaskUserDto>(newTaskDto, true, "Se actualizó la tarea"));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTask(int id)
+        [HttpDelete]
+        public async Task<ActionResult<ResponseGenericApi<bool>>> DeleteTask([FromQuery] int id)
         {
             var result = await _taskUserService.Delete(id);
             if (!result)
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok(new ResponseGenericApi<bool>(result, true, "Se elimino la tarea"));
         }
     }
 }

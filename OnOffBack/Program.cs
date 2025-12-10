@@ -1,7 +1,7 @@
 using Core.Entities;
-using Core.Exceptions;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Services;
+using Core.Mapper;
 using Core.Services;
 using FluentValidation;
 using Infraestructure.Filters;
@@ -9,6 +9,7 @@ using Infraestructure.Repositories;
 using Infraestructure.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence.Data;
@@ -46,6 +47,8 @@ builder.Services.AddSwaggerGen(c =>
   });
 });
 
+
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MapperConfig).Assembly));
 #region Configuration JWT
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]));
 builder.Services.AddAuthentication(x => {
@@ -72,6 +75,7 @@ builder.Services.AddAuthentication(x => {
 
 #region Confoguracion de validaciones 
 builder.Services.AddScoped<IValidator<TaskUser>, TaskUserValidator>();
+builder.Services.AddScoped<IValidator<Users>, UsersValidator>();
 #endregion
 
 #region Configuracion de inyeccion de dependencias 
@@ -112,6 +116,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 
 app.MapControllers();
 
